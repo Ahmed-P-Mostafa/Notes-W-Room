@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class NotesAdapter( context: Context, list: ArrayList<Note>) : RecyclerView.Adapter<NotesAdapter.NoteHolder>() {
-   var list:ArrayList<Note>
+class NotesAdapter( context: Context, list: List<Note>) : RecyclerView.Adapter<NotesAdapter.NoteHolder>() {
+   var list:List<Note>
     val context:Context
 
     init {
@@ -28,11 +28,9 @@ class NotesAdapter( context: Context, list: ArrayList<Note>) : RecyclerView.Adap
         val note = Note(position,holder.title.toString(),holder.description.toString(),holder.description.toString())
         holder.title.text = list.get(position).title
         holder.description.text = list.get(position).description
-        holder.layout.setOnClickListener({
-            if (onLayoutClicked != null) {
-                onLayoutClicked.OnNoteClicked(note,position)
-            }
-        })
+        holder.itemView.setOnClickListener{
+            onLayoutClicked.OnNoteClicked(note,position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -41,16 +39,19 @@ class NotesAdapter( context: Context, list: ArrayList<Note>) : RecyclerView.Adap
     class NoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val title = itemView.findViewById<TextView>(R.id.note_title)
             val description = itemView.findViewById<TextView>(R.id.note_description)
-        val layout= itemView.findViewById<ConstraintLayout>(R.id.layout)
 
     }
 
     interface OnNoteClickListener{
         fun OnNoteClicked(note:Note,position:Int)
     }
-    companion object {
 
-        val onLayoutClicked: OnNoteClickListener? = null
+
+        lateinit var onLayoutClicked: OnNoteClickListener
+
+    fun setOnLayoutClickListener(onLayoutClicked:OnNoteClickListener){
+        this.onLayoutClicked = onLayoutClicked
+
     }
 
 }

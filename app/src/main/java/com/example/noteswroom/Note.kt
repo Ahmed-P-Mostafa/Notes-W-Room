@@ -10,4 +10,6 @@ data class Note(@PrimaryKey(autoGenerate = true) val id:Int
                 , @ColumnInfo(name = "Note Description")val description:String
                 , @ColumnInfo(name = "Note created at")val date:String) {
 
+
+
 }

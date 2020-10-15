@@ -1,21 +1,43 @@
 package com.example.noteswroom
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import kotlinx.android.synthetic.main.fragment_home.*
+import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),NotesAdapter.OnNoteClickListener {
+            var adapter=NotesAdapter(this,null)
+
+    override fun onStart() {
+        super.onStart()
+        val list = NotesDatabase.getInstance(this).notesDao().viewAllNotes()
+        adapter.dataChanged(list)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fragment:Fragment = HomeFragment()
-        val fm:FragmentManager = supportFragmentManager
-        val ft:FragmentTransaction = fm.beginTransaction().add(R.id.frame_layout,fragment)
-        ft.commit()
+        notes_recyclerview.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
 
+        //adapter = NotesAdapter(this,list)
+        notes_recyclerview.adapter = adapter
+
+        fab.setOnClickListener {
+            val intent = Intent(this,NoteActivity::class.java)
+            startActivity(intent)
+        }
+        adapter.setOnLayoutClickListener(this)
+    }
+    override fun OnNoteClicked(note: Note, position: Int) {
+        val intent = Intent(this, NoteActivity::class.java)
+        intent.putExtra("position",position)
+        intent.putExtra("id",note.id)
+        intent.putExtra("title", note.title)
+        intent.putExtra("description", note.description)
+        intent.putExtra("date", note.date)
+        startActivity(intent)
     }
 }

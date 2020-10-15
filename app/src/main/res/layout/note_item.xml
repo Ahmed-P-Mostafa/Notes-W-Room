@@ -19,8 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="note title to be"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
+        style="@style/title_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -32,6 +31,5 @@
         app:layout_constraintTop_toBottomOf="@id/note_title"
         tools:text="note body and description to determine text color , size and color also and it am be change according to what fit next"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        android:textColor="#3C3C3C"/>
+        style="@style/description_text"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -54,12 +55,29 @@ class MainActivity : AppCompatActivity(),NotesAdapter.OnNoteClickListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
+                var temp = adapter.list?.get(viewHolder.adapterPosition)
+
                 NotesDatabase.getInstance(this@MainActivity).notesDao().deleteNote(adapter.list?.get(viewHolder.adapterPosition))
                 list.removeAt(viewHolder.adapterPosition)
                 adapter.dataChanged(list)
 
                 //noteViewModel.delete(adapter.getNoteAt(viewHolder.adapterPosition))
                 Toast.makeText(this@MainActivity, "Note deleted", Toast.LENGTH_SHORT).show()
+
+                Snackbar.make(viewHolder.itemView,"Undo deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
+                    if (temp != null) {
+                        NotesDatabase.getInstance(this@MainActivity).notesDao().addNote(temp)
+                        //TODO complete this error
+                        if (list.size<viewHolder.adapterPosition){
+                            list.add(temp)
+                        }else list.add(viewHolder.adapterPosition, temp)
+
+                        adapter.dataChanged(list)
+                        adapter.notifyItemChanged(viewHolder.adapterPosition)
+                        //adapter.notifyDataSetChanged()
+                    }
+                }.setActionTextColor(resources.getColor(R.color.colorPrimaryDark))
+                    .setTextColor(resources.getColor(android.R.color.white)).show()
 
 
             }

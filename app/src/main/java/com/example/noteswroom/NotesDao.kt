@@ -12,9 +12,9 @@ interface NotesDao {
     fun updateNote(note: Note)
 
 
-    @Query("delete from note where id =:id")
-    fun deleteNote(id:Int)
+    @Delete
+    fun deleteNote(note: Note?)
 
     @Query("SELECT * FROM Note")
-    fun viewAllNotes():List<Note>
+    fun viewAllNotes():MutableList<Note>
 }

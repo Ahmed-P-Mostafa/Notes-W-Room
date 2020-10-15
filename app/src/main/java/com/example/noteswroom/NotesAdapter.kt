@@ -50,6 +50,10 @@ class NotesAdapter( context: Context, list: List<Note>?) : RecyclerView.Adapter<
     interface OnNoteClickListener{
         fun OnNoteClicked(note:Note,position:Int)
     }
+    fun getNoteId(position: Int):Int{
+
+        return list?.get(position)?.id!!
+    }
 
 
         lateinit var onLayoutClicked: OnNoteClickListener

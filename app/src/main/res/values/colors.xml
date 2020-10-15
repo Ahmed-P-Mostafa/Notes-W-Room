@@ -3,6 +3,6 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="descriptionTextColor">#2B2A2A</color>
+    <color name="descriptionTextColor">#3C3C3C</color>
     <color name="noteItemColor">#C7C7C7</color>
 </resources>

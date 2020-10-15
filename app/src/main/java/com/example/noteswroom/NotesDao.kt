@@ -15,6 +15,6 @@ interface NotesDao {
     @Query("delete from note where id =:id")
     fun deleteNote(id:Int)
 
-    @Query("select * From Note")
-    fun viewAllNotes():ArrayList<Note>
+    @Query("SELECT * FROM Note")
+    fun viewAllNotes():List<Note>
 }

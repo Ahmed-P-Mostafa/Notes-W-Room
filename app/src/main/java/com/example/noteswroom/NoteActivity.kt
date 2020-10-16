@@ -41,7 +41,7 @@ class NoteActivity : AppCompatActivity() {
 
             save_btn.setOnClickListener {
 
-                if (title_TV.text != null && description_TV.text != null) {
+                if (description_TV.text != null) {
 
                     val title_text = title_TV.text.toString()
                     val description_text = description_TV.text.toString()

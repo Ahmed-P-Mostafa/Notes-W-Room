@@ -2,13 +2,16 @@ package com.example.noteswroom
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.security.auth.callback.Callback
 
 
 class MainActivity : AppCompatActivity(),NotesAdapter.OnNoteClickListener {
@@ -32,7 +35,6 @@ class MainActivity : AppCompatActivity(),NotesAdapter.OnNoteClickListener {
             false
         )
 
-        //adapter = NotesAdapter(this,list)
         notes_recyclerview.adapter = adapter
 
         fab.setOnClickListener {
@@ -54,36 +56,43 @@ class MainActivity : AppCompatActivity(),NotesAdapter.OnNoteClickListener {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                var position =viewHolder.adapterPosition
+                Log.e("position ",position.toString())
 
-                var temp = adapter.list?.get(viewHolder.adapterPosition)
+                Log.e("swipe list size", list.size.toString())
+                Log.e("swipe position", viewHolder.adapterPosition.toString())
 
-                NotesDatabase.getInstance(this@MainActivity).notesDao().deleteNote(adapter.list?.get(viewHolder.adapterPosition))
-                list.removeAt(viewHolder.adapterPosition)
+                var temp = adapter.list?.get(position)
+
+                NotesDatabase.getInstance(this@MainActivity).notesDao()
+                     .deleteNote(adapter.list?.get(viewHolder.adapterPosition))
+
+                list = NotesDatabase.getInstance(this@MainActivity).notesDao().viewAllNotes()
                 adapter.dataChanged(list)
 
-                //noteViewModel.delete(adapter.getNoteAt(viewHolder.adapterPosition))
                 Toast.makeText(this@MainActivity, "Note deleted", Toast.LENGTH_SHORT).show()
 
-                Snackbar.make(viewHolder.itemView,"Undo deleted",Snackbar.LENGTH_LONG).setAction("Undo") {
-                    if (temp != null) {
-                        NotesDatabase.getInstance(this@MainActivity).notesDao().addNote(temp)
-                        //TODO complete this error
-                        if (list.size<viewHolder.adapterPosition){
-                            list.add(temp)
-                        }else list.add(viewHolder.adapterPosition, temp)
+                Snackbar.make(viewHolder.itemView, "Undo deleted", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        Log.e("undo list size", list.size.toString())
+                        Log.e("undo position", viewHolder.adapterPosition.toString())
+                        if (temp != null) {
+                            NotesDatabase.getInstance(this@MainActivity).notesDao().addNote(temp)
+                            //TODO complete this error
+                            if (viewHolder.adapterPosition <0) {
+                                list.add(temp)
+                            } else list.add(position, temp)
 
-                        adapter.dataChanged(list)
-                        adapter.notifyItemChanged(viewHolder.adapterPosition)
-                        //adapter.notifyDataSetChanged()
-                    }
-                }.setActionTextColor(resources.getColor(R.color.colorPrimaryDark))
-                    .setTextColor(resources.getColor(android.R.color.white)).show()
-
-
+                            list = NotesDatabase.getInstance(this@MainActivity).notesDao().viewAllNotes()
+                            adapter.dataChanged(list)
+                        }
+                    }.setActionTextColor(resources.getColor(android.R.color.holo_red_dark))
+                    .setTextColor(resources.getColor(R.color.noteItemColor)).show()
             }
         }).attachToRecyclerView(notes_recyclerview)
     }
     override fun OnNoteClicked(note: Note, position: Int) {
+        Log.e("item",position.toString())
         val intent = Intent(this, NoteActivity::class.java)
         intent.putExtra("position", position)
         intent.putExtra("id", note.id)

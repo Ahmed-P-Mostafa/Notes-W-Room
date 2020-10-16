@@ -10,6 +10,7 @@ abstract class NotesDatabase :RoomDatabase() {
 
     abstract fun notesDao():NotesDao
 
+
     companion object{
 
         private val DB_NAME = "Notes Database"
@@ -23,4 +24,5 @@ abstract class NotesDatabase :RoomDatabase() {
             return  db
         }
     }
+
 }
